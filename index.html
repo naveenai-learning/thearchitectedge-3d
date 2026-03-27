@@ -849,11 +849,14 @@ function _pushNav() {
 }
 function _updateBackBtn() {
   const btn = document.getElementById('back-btn');
-  if (btn) btn.style.display = _navHistory.length > 0 ? 'inline-flex' : 'none';
+  if (btn) btn.style.display = (_navHistory.length > 0 && !_inFight()) ? 'inline-flex' : 'none';
 }
+const _FIGHT_PHASES = new Set(['battle', 'question', 'answered']);
+function _inFight() { return gameState && _FIGHT_PHASES.has(gameState.phase); }
+
 function goBack() {
   if (_navHistory.length === 0) return;
-  if (gameState && gameState.phase === 'answered') return;
+  if (_inFight()) return;
   _recordNav = false;
   const prev = _navHistory.pop();
   if (prev.view === 'game') { showSection('game'); }
@@ -944,6 +947,7 @@ function initGame() {
 }
 
 function renderGame() {
+  _updateBackBtn();
   const root = document.getElementById('game-root');
   const gs = gameState;
   const lv = LEVELS[gs.level] || LEVELS[0];
