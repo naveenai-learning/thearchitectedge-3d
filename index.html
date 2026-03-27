@@ -853,6 +853,7 @@ function _updateBackBtn() {
 }
 function goBack() {
   if (_navHistory.length === 0) return;
+  if (gameState && gameState.phase === 'answered') return;
   _recordNav = false;
   const prev = _navHistory.pop();
   if (prev.view === 'game') { showSection('game'); }
